@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Lab 1, Cloudformation part.
+
+Resources:
+  ViewOnlyRoleCF:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ViewOnlyRoleCF
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::694226983293:user/NazarViewOnly 
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Name
+          Value: ViewOnlyRoleCF
+
+  ViewOnlyPolicyCF:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ViewOnlyPolicyCF
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - ec2:Describe*
+              - s3:List*
+              - s3:Get*
+              - iam:Get*
+              - iam:List*
+            Resource: "*"
+      Roles:
+        - !Ref ViewOnlyRoleCF
+
+Outputs:
+  RoleName:
+    Description: Role name
+    Value: !Ref ViewOnlyRoleCF
+
+  PolicyName:
+    Description: Policy name
+    Value: !Ref ViewOnlyPolicyCF
